@@ -1,12 +1,21 @@
-var jwt = require('jwt-simple');
+var jwt     = require('jwt-simple');
+var request = require('request');
+var async   = require('async');
 
 var auth = {
     login: function(req, res) {
-        // TODO : login facebook access_token
-        var username = req.body.username || '';
-        var password = req.body.password || '';
- 
-        if (username == '' || password == '') {
+        var username        = req.body.username        || '';
+        var password        = req.body.password        || '';
+        var fb_access_token = req.body.fb_access_token || '';
+
+        if (fb_access_token != '') {
+            // Fire a query to your DB and check if the credentials are valid
+            return auth.validateByFb(res, fb_access_token§);
+        } else if (username != '' && password != '') {
+            // TODO : Username and password authentication
+            // Fire a query to your DB and check if the credentials are valid
+            return auth.validate(res, username, password);
+        } else {
             res.status(401);
             res.json({
                 "status": 401,
@@ -15,28 +24,9 @@ var auth = {
             
             return;
         }
-    
-        // Fire a query to your DB and check if the credentials are valid
-        var dbUserObj = auth.validate(username, password);
-   
-        if (!dbUserObj) { // If authentication fails, we send a 401 back
-            res.status(401);
-            res.json({
-                "status": 401,
-                "message": "Invalid credentials"
-            });
-
-            return;
-        }
- 
-        if (dbUserObj) {
-            // If authentication is success, we will generate a token
-            // and dispatch it to the client
-            res.json(genToken(dbUserObj));
-        }
     },
 
-    validate: function(username, password) {
+    validate: function(res, username, password) {
         // TODO : Get user in DB
         
         // spoofing the DB response for simplicity
@@ -47,6 +37,53 @@ var auth = {
         };
  
         return dbUserObj;
+    },
+
+    validateByFb: function(res, fb_access_token) {
+        async.series([
+            function(callback){
+                request.get('https://graph.facebook.com/v2.3/me?access_token=' + fb_access_token, function(err, response, data) {
+                    if (response.statusCode != 200) {   // If errors, return status code and error message
+                        callback({
+                            "status": response.statusCode,
+                            "message": response.statusMessage
+                        }, null)
+                    } else if (response.statusCode == 200) {
+                        var parsedData = JSON.parse(data);
+
+                        // Call the callback function if success
+                        callback(null, {
+                            "status": response.statusCode,
+                            "user": {
+                                "firstName": parsedData.first_name,
+                                "lastName": parsedData.last_name,
+                                "email": parsedData.email
+                            }
+                        })
+                    };      
+                })
+            }
+        ],
+        function(errors, results) {
+            if (errors) {
+                res.status(errors.status);
+                res.json({
+                    "status": errors.status,
+                    "message": errors.message
+                });
+
+                return;
+            };
+
+            // TODO : Find user in DB and return informations
+            res.status(200);
+            res.json({
+                "status": results[0].status,
+                "token": genToken(results[0].user)
+            });
+
+            return;
+        });
     },
  
     validateUser: function(username) {
