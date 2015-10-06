@@ -1,6 +1,7 @@
 var jwt     = require('jwt-simple');
 var request = require('request');
 var async   = require('async');
+var User    = require('../model/userModel')
 
 var auth = {
     login: function(req, res) {
@@ -10,7 +11,7 @@ var auth = {
 
         if (fb_access_token != '') {
             // Fire a query to your DB and check if the credentials are valid
-            return auth.validateByFb(res, fb_access_token§);
+            return auth.validateByFb(res, fb_access_token);
         } else if (username != '' && password != '') {
             // TODO : Username and password authentication
             // Fire a query to your DB and check if the credentials are valid
@@ -25,6 +26,7 @@ var auth = {
             return;
         }
     },
+
 
     validate: function(res, username, password) {
         // TODO : Get user in DB
@@ -42,23 +44,66 @@ var auth = {
     validateByFb: function(res, fb_access_token) {
         async.series([
             function(callback){
-                request.get('https://graph.facebook.com/v2.3/me?access_token=' + fb_access_token, function(err, response, data) {
+                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name&access_token=' + fb_access_token, function(err, response, data) {
                     if (response.statusCode != 200) {   // If errors, return status code and error message
                         callback({
                             "status": response.statusCode,
                             "message": response.statusMessage
                         }, null)
                     } else if (response.statusCode == 200) {
+                        // Good FB Access Token
                         var parsedData = JSON.parse(data);
 
-                        // Call the callback function if success
-                        callback(null, {
-                            "status": response.statusCode,
-                            "user": {
-                                "firstName": parsedData.first_name,
-                                "lastName": parsedData.last_name,
-                                "email": parsedData.email
+                        console.log("User findOne");
+                        User.findOne({ email: parsedData.email }, function(err, user) {
+                            if (err) {
+                                console.log("User findOne - Error");
+                                callback({
+                                    "status": 400,
+                                    "message": err
+                                }, null)
                             }
+
+                            if (!user) {
+                                // First Log - Register user
+                                console.log("User findOne - Bad User");
+                                console.log("User Register");
+                                // Register user
+                                var birthday  = parsedData.birthday;
+                                //  Get Age from birthday
+                                var birth = birthday.split("/").reverse();
+                                var Bdate = new Date(birth[0], birth[2] - 1, birth[1]);
+                                var age   = Math.floor( ( (new Date() - Bdate) / 1000 / (60 * 60 * 24) ) / 365.25 );
+
+                                var newUser = new User({
+                                    firstname: parsedData.first_name,
+                                    lastname : parsedData.last_name,
+                                    email    : parsedData.email,
+                                    age      : age
+                                });
+
+                                // Save user in DB
+                                newUser.save(function(err) {
+                                    if (err) {
+                                        return err;
+                                    }
+
+                                    callback(null, {
+                                        "status" : 201,
+                                        "user"   : newUser,
+                                        "message": "User created"
+                                    })
+                                })
+                            } else {
+                                // User login
+                                console.log("User findOne - Good :)");
+                                callback(null, {
+                                    "status" : 200,
+                                    "user"   : user,
+                                    "message": "User logged"
+                                })
+                            }
+
                         })
                     };      
                 })
@@ -75,11 +120,11 @@ var auth = {
                 return;
             };
 
-            // TODO : Find user in DB and return informations
             res.status(200);
             res.json({
-                "status": results[0].status,
-                "token": genToken(results[0].user)
+                "status" : results[0].status,
+                "token"  : genToken(results[0].user),
+                "message": results[0].message
             });
 
             return;
