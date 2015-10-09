@@ -1,8 +1,8 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema   = mongoose.Schema;
 
 var HashtagSchema = new Schema({
-  name: { type: String }
+    name: { type: String }
 })
 
 
