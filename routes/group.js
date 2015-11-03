@@ -21,11 +21,12 @@ var group = {
                 status: 201,
                 message: 'group created.'
             });
-        };
-        res.json({
-            status: 400,
-            message: 'You already have a group.'
-        });
+        } else {
+            res.json({
+                status: 400,
+                message: 'You already have a group.'
+            });
+        }
     }
 }
 
