@@ -1,7 +1,8 @@
 var jwt     = require('jwt-simple');
 var request = require('request');
 var async   = require('async');
-var User    = require('../model/userModel')
+var User    = require('../model/userModel');
+var Group   = require('../model/groupModel');
 
 var auth = {
     login: function(req, res) {
@@ -44,7 +45,7 @@ var auth = {
     validateByFb: function(res, fb_access_token) {
         async.series([
             function(callback){
-                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name&access_token=' + fb_access_token, function(err, response, data) {
+                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name,gender&access_token=' + fb_access_token, function(err, response, data) {
                     if (response.statusCode != 200) {   // If errors, return status code and error message
                         callback({
                             "status": response.statusCode,
@@ -79,7 +80,8 @@ var auth = {
                                     firstname: parsedData.first_name,
                                     lastname : parsedData.last_name,
                                     email    : parsedData.email,
-                                    age      : age
+                                    age      : age,
+                                    gender   : parsedData.gender,
                                 });
 
                                 // Save user in DB
@@ -121,10 +123,12 @@ var auth = {
             };
 
             res.status(200);
+            console.log(results[0].user);
             res.json({
                 "status" : results[0].status,
                 "token"  : genToken(results[0].user),
-                "message": results[0].message
+                "message": results[0].message,
+                "user"   : results[0].user
             });
 
             return;

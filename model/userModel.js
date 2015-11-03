@@ -9,6 +9,7 @@ var UserSchema = new Schema({
     lastname      : { type: String, match: /^[a-zA-Z0-9-_]+$/ },
     age           : { type: Number, min: 18 },
     email         : { type: String, index: { unique: true } },
+    gender        : { type: String, match: /^[male]||[female]$/ },
     isActive      : { type: Boolean },
     createdAt     : { type: Date },
     updatedAt     : { type: Date },
