@@ -26,8 +26,8 @@ module.exports = function(req, res, next) {
             }
  
             // Authorize the user to see if s/he can access our resources
- 
-            validateUser(req, res, key); // The key would be the logged in user's username
+        
+            validateUser(req, res, next, key); // The key would be the logged in user's username
         } catch (err) {
             res.status(500);
             res.json({

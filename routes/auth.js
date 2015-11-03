@@ -134,20 +134,16 @@ var auth = {
         });
     },
  
-    validateUser: function(req, res, email) {
+    validateUser: function(req, res, next, email) {
         User.findOne({ email: email }, function(err, user) {
             if (err) {
                 console.log("Validate User Error");
                 return err;
             }
 
-            if (!user) {
-                return null
-            }
-            console.log("Validate User Find user");
-            console.log(user);
-
-            if (user.email) {
+            if (user) {
+                console.log("Validate User Find user");
+                req.Cluztr = {};
                 req.Cluztr.user = user;
                 next(); // To move to next middleware
             } else {
