@@ -27,20 +27,7 @@ module.exports = function(req, res, next) {
  
             // Authorize the user to see if s/he can access our resources
  
-            var dbUser = validateUser(key); // The key would be the logged in user's username
-            if (dbUser.email) {
-                req.Cluztr.user = dbUser;
-                next(); // To move to next middleware
-            } else {
-                // No user with this name exists, respond back with a 401
-                res.status(401);
-                res.json({
-                    "status": 401,
-                    "message": "Invalid User"
-                });
-        
-                return;
-            }
+            validateUser(req, res, key); // The key would be the logged in user's username
         } catch (err) {
             res.status(500);
             res.json({

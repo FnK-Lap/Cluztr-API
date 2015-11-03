@@ -134,7 +134,7 @@ var auth = {
         });
     },
  
-    validateUser: function(email) {
+    validateUser: function(req, res, email) {
         User.findOne({ email: email }, function(err, user) {
             if (err) {
                 console.log("Validate User Error");
@@ -146,7 +146,18 @@ var auth = {
             }
             console.log("Validate User Find user");
             console.log(user);
-            return user
+
+            if (user.email) {
+                req.Cluztr.user = user;
+                next(); // To move to next middleware
+            } else {
+                // No user with this name exists, respond back with a 401
+                res.status(401);
+                res.json({
+                    "status": 401,
+                    "message": "Invalid User"
+                });
+            }
         })
     },
 }
