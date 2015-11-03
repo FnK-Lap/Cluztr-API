@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     Picture  = require('./pictureModel'),
     Interest = require('./interestModel'),
+    Group    = require('./groupModel'),
     Schema   = mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -13,7 +14,8 @@ var UserSchema = new Schema({
     updatedAt     : { type: Date },
     interests     : [{ type: Schema.Types.ObjectId, ref: 'Interest'}],
     profilePicture: { type: Schema.Types.ObjectId, ref: 'Picture' },
-    pictures      : [{ type: Schema.Types.ObjectId, ref: 'Picture'}]
+    pictures      : [{ type: Schema.Types.ObjectId, ref: 'Picture'}],
+    groupId       : { type: Schema.Types.ObjectId, ref: 'Group' }
 })
 
 
