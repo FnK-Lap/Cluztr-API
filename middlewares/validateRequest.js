@@ -29,17 +29,7 @@ module.exports = function(req, res, next) {
  
             var dbUser = validateUser(key); // The key would be the logged in user's username
             if (dbUser) {
-                if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
-                    next(); // To move to next middleware
-                } else {
-                    res.status(403);
-                    res.json({
-                        "status": 403,
-                        "message": "Not Authorized"
-                    });
-          
-                    return;
-                }
+                next(); // To move to next middleware
             } else {
                 // No user with this name exists, respond back with a 401
                 res.status(401);

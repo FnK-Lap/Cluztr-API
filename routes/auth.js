@@ -123,7 +123,6 @@ var auth = {
             };
 
             res.status(200);
-            console.log(results[0].user);
             res.json({
                 "status" : results[0].status,
                 "token"  : genToken(results[0].user),
@@ -135,17 +134,23 @@ var auth = {
         });
     },
  
-    validateUser: function(username) {
-        // TODO : Get user in DB
+    validateUser: function(email) {
+        User.findOne({ email: email }, function(err, user) {
+            if (err) {
+                console.log("Validate User Error");
+                callback({
+                    "status": 400,
+                    "message": err
+                }, null)
+            }
 
-        // spoofing the DB response for simplicity
-        var dbUserObj = { // spoofing a userobject from the DB. 
-            name: 'arvind',
-            role: 'admin',
-            username: 'arvind@myapp.com'
-        };
-
-        return dbUserObj;
+            if (!user) {
+                return null
+            }
+            console.log("Validate User Find user");
+            console.log(user);
+            return user
+        })
     },
 }
  
