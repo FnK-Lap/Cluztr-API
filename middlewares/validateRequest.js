@@ -29,6 +29,7 @@ module.exports = function(req, res, next) {
  
             var dbUser = validateUser(key); // The key would be the logged in user's username
             if (dbUser) {
+                req.Cluztr.user = dbUser;
                 next(); // To move to next middleware
             } else {
                 // No user with this name exists, respond back with a 401
