@@ -138,10 +138,7 @@ var auth = {
         User.findOne({ email: email }, function(err, user) {
             if (err) {
                 console.log("Validate User Error");
-                callback({
-                    "status": 400,
-                    "message": err
-                }, null)
+                return err;
             }
 
             if (!user) {

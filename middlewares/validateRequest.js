@@ -28,7 +28,7 @@ module.exports = function(req, res, next) {
             // Authorize the user to see if s/he can access our resources
  
             var dbUser = validateUser(key); // The key would be the logged in user's username
-            if (dbUser) {
+            if (dbUser.email) {
                 req.Cluztr.user = dbUser;
                 next(); // To move to next middleware
             } else {
