@@ -58,7 +58,8 @@ var group = {
                 }, function(err) {
                     res.json({
                         status: 200,
-                        message: group
+                        message: "Get group success",
+                        data: group
                     });
                 });
             }
