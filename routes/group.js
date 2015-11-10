@@ -1,5 +1,7 @@
 var jwt     = require('jwt-simple');
+var async   = require('async');
 var Group   = require('../model/groupModel.js');
+var Picture    = require('../model/pictureModel.js');
 
 var group = {
     create: function (req, res) {
@@ -27,6 +29,40 @@ var group = {
                 message: 'You already have a group.'
             });
         }
+    },
+    get: function (req, res, id) {
+        console.log(req.params.id);
+
+        Group.findOne({ _id: req.params.id })
+            .populate('usersId')
+            .exec(function (err, group) {
+                if (err) {
+                    return res.json({
+                        status: 400,
+                        message: err
+                    });
+                }
+
+                async.each(group.usersId,function(item,callback) {
+                    console.log(item);
+                    Picture.populate(item,{ path: "profilePicture" },function(err,output) {
+                        if (err) {
+                            res.json({
+                                status: 400,
+                                message: err
+                            });
+                        }
+
+                        callback();
+                    });
+                }, function(err) {
+                    res.json({
+                        status: 200,
+                        message: group
+                    });
+                });
+            }
+        );
     }
 }
 

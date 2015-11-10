@@ -9,6 +9,7 @@ var group   = require('./group.js');
  */
 router.post('/login', auth.login);
 router.post('/api/v1/groups', group.create);
+router.get('/api/v1/group/:id', group.get);
 
 
 module.exports = router;

@@ -3,6 +3,7 @@ var request = require('request');
 var async   = require('async');
 var User    = require('../model/userModel');
 var Group   = require('../model/groupModel');
+var Picture = require('../model/pictureModel');
 
 var auth = {
     login: function(req, res) {
@@ -45,7 +46,7 @@ var auth = {
     validateByFb: function(res, fb_access_token) {
         async.series([
             function(callback){
-                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name,gender&access_token=' + fb_access_token, function(err, response, data) {
+                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name,gender,picture{url}&access_token=' + fb_access_token, function(err, response, data) {
                     if (response.statusCode != 200) {   // If errors, return status code and error message
                         callback({
                             "status": response.statusCode,
@@ -77,24 +78,43 @@ var auth = {
                                 var age   = Math.floor( ( (new Date() - Bdate) / 1000 / (60 * 60 * 24) ) / 365.25 );
 
                                 var newUser = new User({
-                                    firstname: parsedData.first_name,
-                                    lastname : parsedData.last_name,
-                                    email    : parsedData.email,
-                                    age      : age,
-                                    gender   : parsedData.gender,
+                                    firstname      : parsedData.first_name,
+                                    lastname       : parsedData.last_name,
+                                    email          : parsedData.email,
+                                    age            : age,
+                                    gender         : parsedData.gender,
                                 });
-
                                 // Save user in DB
                                 newUser.save(function(err) {
                                     if (err) {
                                         return err;
                                     }
 
-                                    callback(null, {
-                                        "status" : 201,
-                                        "user"   : newUser,
-                                        "message": "User created"
+                                    var profilePicture = new Picture({
+                                        url: parsedData.picture.data.url,
+                                        userId: newUser._id
+                                    });
+
+                                    profilePicture.save(function(err) {
+                                        if (err) {
+                                            return err;
+                                        }
+
+                                        newUser.profilePicture = profilePicture._id;
+                                        newUser.save(function(err) {
+                                            if (err) {
+                                                return err;
+                                            }
+
+                                            callback(null, {
+                                                "status" : 201,
+                                                "user"   : newUser,
+                                                "message": "User created"
+                                            })
+                                        });
                                     })
+
+                                    
                                 })
                             } else {
                                 // User login
