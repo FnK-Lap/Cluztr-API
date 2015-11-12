@@ -8,10 +8,14 @@ var group   = require('./group.js');
  * Routes that can be accessed by any one
  */
 router.post('/login', auth.login);
+
+// Group
 router.post('/api/v1/groups', group.create);
 router.get('/api/v1/group/:id', group.get);
 router.post('/api/v1/group/:id/invite', group.invite);
 router.post('/api/v1/group/:id/join', group.join);
+
+// User
 router.get('/api/v1/user/:id/invitations', group.getInvitations);
 
 
