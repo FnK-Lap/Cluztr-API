@@ -1,6 +1,7 @@
-var jwt     = require('jwt-simple');
-var async   = require('async');
-var Group   = require('../model/groupModel.js');
+var jwt        = require('jwt-simple');
+var async      = require('async');
+var Group      = require('../model/groupModel.js');
+var Invitation = require('../model/invitationModel.js');
 var Picture    = require('../model/pictureModel.js');
 
 var group = {
@@ -30,7 +31,7 @@ var group = {
             });
         }
     },
-    get: function (req, res, id) {
+    get: function (req, res) {
         console.log(req.params.id);
 
         Group.findOne({ _id: req.params.id })
@@ -64,6 +65,18 @@ var group = {
                 });
             }
         );
+    },
+    invite: function(req, res){
+        if (req.Cluztr.user._id) {
+            var invitation = new Invitation({
+                created_at: new Date(),
+                groupId:    req.Cluztr.user.groupId,
+                userId:     req.Cluztr.user._id,
+                email:      req.params.email
+            });
+
+            invitation.save();
+        };
     }
 }
 
