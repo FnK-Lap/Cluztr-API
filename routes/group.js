@@ -66,18 +66,30 @@ var group = {
             }
         );
     },
-    invite: function(req, res){
-        var invitation = new Invitation({
-            created_at: new Date(),
-            groupId:    req.Cluztr.user.groupId,
-            userId:     req.Cluztr.user._id,
-            email:      req.params.email
-        });
+    invite: function(req, res) {
+        if (req.body.email) {
+            var invitation = new Invitation({
+                created_at: new Date(),
+                groupId:    req.Cluztr.user.groupId,
+                userId:     req.Cluztr.user._id,
+                email:      req.body.email
+            });
 
-        invitation.save();
+            invitation.save();
+            
+            res.json({
+                status: 201,
+                message: "Invite Success"
+            })
+        } else {
+            res.json({
+                status: 400,
+                message: "Invite Fail"
+            })
+        }
     },
-    join: function(req, res){
-        Group.findOneAndUpdate({ _id: req.params.groupId}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
+    join: function(req, res) {
+        Group.findOneAndUpdate({ _id: req.params.id}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
             if (err)
               res.json({ 
                 status:400,
@@ -85,7 +97,7 @@ var group = {
               })
 
             User.findOne({ _id: req.Cluztr.user._id }, function (err, user){
-              user.groupId = req.params.groupId;
+              user.groupId = req.params.id;
               user.save();
             });
 
@@ -95,6 +107,23 @@ var group = {
                 data: group
             });
         });
+    },
+    getInvitations: function(req, res) {
+        var user = req.Cluztr.user;
+
+        Invitation.find({ email: user.email }, function(err, invitations) {
+            if (err) {
+                res.json({
+                    status: 400,
+                    message: err
+                });
+            }
+
+            res.json({
+                status: 200,
+                data: invitations
+            })
+        })
     }
 }
 
