@@ -68,27 +68,36 @@ var group = {
         );
     },
     invite: function(req, res) {
-        // Verifier si une invitation est deja presente
-        if (req.body.email) {
-            var invitation = new Invitation({
-                created_at: new Date(),
-                groupId:    req.Cluztr.user.groupId,
-                userId:     req.Cluztr.user._id,
-                email:      req.body.email
-            });
+        // Check if user already got an invitation from this group.
+        Invitation.findOne({ email: req.Cluztr.user.email, groupId: req.params.id }, function (err, invitation){
+            if (invitation) {
+                res.json({
+                    status: 400,
+                    message: "Vous avez déjà inviter cette personne à rejoindre votre groupe."
+                });
+            } else {
+                if (req.body.email) {
+                    var invitation = new Invitation({
+                        created_at: new Date(),
+                        groupId:    req.Cluztr.user.groupId,
+                        userId:     req.Cluztr.user._id,
+                        email:      req.body.email
+                    });
 
-            invitation.save();
-            
-            res.json({
-                status: 201,
-                message: "Invite Success"
-            })
-        } else {
-            res.json({
-                status: 400,
-                message: "Invite Fail"
-            })
-        }
+                    invitation.save();
+                    
+                    res.json({
+                        status: 201,
+                        message: "Invite Success"
+                    })
+                } else {
+                    res.json({
+                        status: 400,
+                        message: "Invite Fail"
+                    })
+                }
+            }
+        });
     },
     join: function(req, res) {
         // Verifier si une invitation correspond
