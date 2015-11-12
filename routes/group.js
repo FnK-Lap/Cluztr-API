@@ -3,6 +3,7 @@ var async      = require('async');
 var Group      = require('../model/groupModel.js');
 var Invitation = require('../model/invitationModel.js');
 var Picture    = require('../model/pictureModel.js');
+var User       = require('../model/userModel.js');
 
 var group = {
     create: function (req, res) {
@@ -92,6 +93,8 @@ var group = {
     join: function(req, res) {
         // Verifier si une invitation correspond
         // Verifier que le mec n'a pas de groupe
+        // Verifier que le groupe n'est pas deja complet
+        // Virer invitation
         Group.findOneAndUpdate({ _id: req.params.id}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
             if (err)
               res.json({ 
