@@ -67,16 +67,34 @@ var group = {
         );
     },
     invite: function(req, res){
-        if (req.Cluztr.user._id) {
-            var invitation = new Invitation({
-                created_at: new Date(),
-                groupId:    req.Cluztr.user.groupId,
-                userId:     req.Cluztr.user._id,
-                email:      req.params.email
+        var invitation = new Invitation({
+            created_at: new Date(),
+            groupId:    req.Cluztr.user.groupId,
+            userId:     req.Cluztr.user._id,
+            email:      req.params.email
+        });
+
+        invitation.save();
+    },
+    join: function(req, res){
+        Group.findOneAndUpdate({ _id: req.params.groupId}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
+            if (err)
+              res.json({ 
+                status:400,
+                message: err
+              })
+
+            User.findOne({ _id: req.Cluztr.user._id }, function (err, user){
+              user.groupId = req.params.groupId;
+              user.save();
             });
 
-            invitation.save();
-        };
+            res.json({
+                status: 200,
+                message: "Join group success",
+                data: group
+            });
+        });
     }
 }
 
