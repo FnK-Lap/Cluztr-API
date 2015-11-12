@@ -67,6 +67,7 @@ var group = {
         );
     },
     invite: function(req, res) {
+        // Verifier si une invitation est deja presente
         if (req.body.email) {
             var invitation = new Invitation({
                 created_at: new Date(),
@@ -89,6 +90,8 @@ var group = {
         }
     },
     join: function(req, res) {
+        // Verifier si une invitation correspond
+        // Verifier que le mec n'a pas de groupe
         Group.findOneAndUpdate({ _id: req.params.id}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
             if (err)
               res.json({ 
