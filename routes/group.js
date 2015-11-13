@@ -70,7 +70,7 @@ var group = {
     },
     invite: function(req, res) {
         // Check if user already got an invitation from this group.
-        Invitation.findOne({ email: req.Cluztr.user.email, groupId: req.params.id }, function (err, invitation){
+        Invitation.findOne({ email: req.body.email, groupId: req.params.id }, function (err, invitation){
             if (invitation) {
                 res.json({
                     status: 400,
