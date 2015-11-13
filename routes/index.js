@@ -16,7 +16,7 @@ router.post('/api/v1/group/:id/invite', group.invite);
 router.post('/api/v1/group/:id/join', group.join);
 
 // User
-router.get('/api/v1/user/:id/invitations', group.getInvitations);
+router.get('/api/v1/user/me/invitations', group.getInvitations);
 
 
 module.exports = router;
