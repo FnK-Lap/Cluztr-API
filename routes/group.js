@@ -164,20 +164,23 @@ var group = {
     },
     getInvitations: function(req, res) {
         var user = req.Cluztr.user;
+        Invitation.find({ email: user.email })
+            .populate('groupId')
+            .populate('userId')
+            .exec(function(err, invitations) {
+                if (err) {
+                    res.json({
+                        status: 400,
+                        message: err
+                    });
+                }
 
-        Invitation.find({ email: user.email }, function(err, invitations) {
-            if (err) {
                 res.json({
-                    status: 400,
-                    message: err
-                });
+                    status: 200,
+                    data: invitations
+                })
             }
-
-            res.json({
-                status: 200,
-                data: invitations
-            })
-        })
+        )
     }
 }
 
