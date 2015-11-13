@@ -175,7 +175,7 @@ var group = {
                     });
                 }
 
-                async.each(invitations,function(item,callback) {
+                async.each(invitations, function(item, callback) {
                     Picture.populate(item.userId,{ path: "profilePicture" },function(err,output) {
                         if (err) {
                             res.json({
@@ -183,15 +183,39 @@ var group = {
                                 message: err
                             });
                         }
-
-                        callback();
+                    });
+                    User.populate(item.groupId,{ path: "usersId" }, function(err, output) {
+                        if (err) {
+                            res.json({
+                                status: 400,
+                                message: err
+                            });
+                        };
+                        async.each(output.usersId, function(val, done) {
+                            Picture.populate(val,{ path: "profilePicture" },function(err,output) {
+                                if (err) {
+                                    res.json({
+                                        status: 400,
+                                        message: err
+                                    });
+                                }
+                                done();
+                            });
+                        }, function(err) {
+                           res.json({
+                                status: 200,
+                                message: "Get Invitations success",
+                                data: invitations
+                            }) 
+                        });
                     });
                 }, function(err) {
-                    res.json({
-                        status: 200,
-                        message: "Get Invitations success",
-                        data: invitations
-                    })
+                    if (err) {
+                        res.json({
+                            status: 400,
+                            message: err
+                        });
+                    }
                 });
 
                 
