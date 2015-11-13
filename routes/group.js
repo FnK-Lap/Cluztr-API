@@ -175,10 +175,26 @@ var group = {
                     });
                 }
 
-                res.json({
-                    status: 200,
-                    data: invitations
-                })
+                async.each(invitations,function(item,callback) {
+                    Picture.populate(item.userId,{ path: "profilePicture" },function(err,output) {
+                        if (err) {
+                            res.json({
+                                status: 400,
+                                message: err
+                            });
+                        }
+
+                        callback();
+                    });
+                }, function(err) {
+                    res.json({
+                        status: 200,
+                        message: "Get Invitations success",
+                        data: invitations
+                    })
+                });
+
+                
             }
         )
     }
