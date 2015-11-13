@@ -23,7 +23,8 @@ var group = {
 
             res.json({
                 status: 201,
-                message: 'group created.'
+                message: 'group created.',
+                user: user
             });
         } else {
             res.json({
