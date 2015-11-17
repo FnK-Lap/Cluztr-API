@@ -202,11 +202,14 @@ var group = {
                                 done();
                             });
                         }, function(err) {
-                           res.json({
-                                status: 200,
-                                message: "Get Invitations success",
-                                data: invitations
-                            }) 
+                            if (err) {
+                                res.json({
+                                    status: 400,
+                                    message: err
+                                });
+                            }
+
+                            callback();
                         });
                     });
                 }, function(err) {
@@ -216,6 +219,12 @@ var group = {
                             message: err
                         });
                     }
+
+                    res.json({
+                        status: 200,
+                        message: "Get Invitations success",
+                        data: invitations
+                    }) 
                 });
 
                 
