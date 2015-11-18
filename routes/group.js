@@ -34,8 +34,6 @@ var group = {
         }
     },
     get: function (req, res) {
-        console.log(req.params.id);
-
         Group.findOne({ _id: req.params.id })
             .populate('usersId')
             .exec(function (err, group) {
@@ -47,7 +45,6 @@ var group = {
                 }
 
                 async.each(group.usersId,function(item,callback) {
-                    console.log(item);
                     Picture.populate(item,{ path: "profilePicture" },function(err,output) {
                         if (err) {
                             res.json({
@@ -80,7 +77,7 @@ var group = {
                 if (req.body.email) {
                     var invitation = new Invitation({
                         created_at: new Date(),
-                        groupId:    req.Cluztr.user.groupId,
+                        groupId:    req.params.id,
                         userId:     req.Cluztr.user._id,
                         email:      req.body.email
                     });
@@ -115,40 +112,41 @@ var group = {
                 if (invitation) {
                     Group.findOneAndUpdate({ _id: req.params.id}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
                         if (err)
-                            res.json({ 
+                            res.status(400).json({ 
                                 status:400,
                                 message: err
                             })
 
                         if (group.usersId.length < 3) {
                             User.findOne({ _id: req.Cluztr.user._id }, function (err, user){
-                              user.groupId = req.params.id;
-                              user.save();
-                            });
+                                user.groupId = req.params.id;
+                                user.save();
 
-                            Invitation.remove({ _id: invitation._id }, function(err) {
-                                if (err) {
+                                Invitation.remove({ _id: invitation._id }, function(err) {
+                                    if (err) {
+                                        res.status(400).json({
+                                            status: 400,
+                                            message: err
+                                        })
+                                    }
+
                                     res.json({
-                                        status: 400,
-                                        message: err
-                                    })
-                                }
-
-                                res.json({
-                                    status: 200,
-                                    message: "Join group success",
-                                    data: group
-                                });
-                            })
+                                        status: 200,
+                                        message: "Join group success",
+                                        data: group,
+                                        user: user
+                                    });
+                                })
+                            });
                         } else {
-                            res.json({
+                            res.status(400).json({
                                 status: 400,
                                 message: "Group full"
                             })
                         }
                     });
                 } else {
-                    res.json({
+                    res.status(400).json({
                         status: 400,
                         message: "You have no invitations"
                     })
@@ -156,7 +154,7 @@ var group = {
 
             })
         } else {
-            res.json({
+            res.status(400).json({
                 status: 400,
                 message: "You already have a group"
             })
