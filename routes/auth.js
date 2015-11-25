@@ -6,6 +6,19 @@ var Group   = require('../model/groupModel');
 var Picture = require('../model/pictureModel');
 
 var auth = {
+    //////////////////
+    //     DEBUG    //
+    //////////////////
+    debugToken: function(req, res) {
+        var email = req.params.email;
+        User.findOne({ email: email }, function(err, user) {
+            var token = genToken(user);
+            res.json({
+                "user": user,
+                "token": token
+            })
+        })
+    },
     login: function(req, res) {
         var username        = req.body.username        || '';
         var password        = req.body.password        || '';

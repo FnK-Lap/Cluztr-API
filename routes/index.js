@@ -9,6 +9,11 @@ var group   = require('./group.js');
  */
 router.post('/login', auth.login);
 
+//////////////
+//   DEBUG  //
+//////////////
+router.get('/admin/token/:email', auth.debugToken);
+
 // Group
 router.post('/api/v1/groups', group.create);
 router.get('/api/v1/group/:id', group.get);
