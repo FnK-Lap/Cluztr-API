@@ -66,34 +66,44 @@ var group = {
         );
     },
     invite: function(req, res) {
-        // Check if user already got an invitation from this group.
-        Invitation.findOne({ email: req.body.email, groupId: req.params.id }, function (err, invitation){
-            if (invitation) {
-                res.json({
+        // Check if group exist
+        Group.findOne({ _id: req.params.id }, function (err, group){
+            if (err) {
+                return res.json({
                     status: 400,
-                    message: "Vous avez déjà inviter cette personne à rejoindre votre groupe."
-                });
+                    message: "Ce groupe n'existe pas."
+                }); 
             } else {
-                if (req.body.email) {
-                    var invitation = new Invitation({
-                        created_at: new Date(),
-                        groupId:    req.params.id,
-                        userId:     req.Cluztr.user._id,
-                        email:      req.body.email
-                    });
+                // Check if user already got an invitation from this group.
+                Invitation.findOne({ email: req.body.email, groupId: req.params.id }, function (err, invitation){
+                    if (invitation) {
+                        res.json({
+                            status: 400,
+                            message: "Vous avez déjà inviter cette personne à rejoindre votre groupe."
+                        });
+                    } else {
+                        if (req.body.email) {
+                            var invitation = new Invitation({
+                                created_at: new Date(),
+                                groupId:    req.params.id,
+                                userId:     req.Cluztr.user._id,
+                                email:      req.body.email
+                            });
 
-                    invitation.save();
-                    
-                    res.json({
-                        status: 201,
-                        message: "Invite Success"
-                    })
-                } else {
-                    res.json({
-                        status: 400,
-                        message: "Invite Fail"
-                    })
-                }
+                            invitation.save();
+                            
+                            res.json({
+                                status: 201,
+                                message: "Invite Success"
+                            })
+                        } else {
+                            res.json({
+                                status: 400,
+                                message: "Invite Fail"
+                            })
+                        }
+                    }
+                });
             }
         });
     },
