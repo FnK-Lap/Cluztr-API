@@ -40,7 +40,7 @@ var group = {
                 if (err) {
                     return res.json({
                         status: 400,
-                        message: err
+                        message: "That group doesn't exist"
                     });
                 }
 
@@ -105,53 +105,58 @@ var group = {
                 if (err) {
                     res.json({
                         status: 400,
-                        message: err
+                        message: "No invitations found"
                     });
                 }
 
                 if (invitation) {
-                    Group.findOneAndUpdate({ _id: req.params.id}, { $push:{ usersId: req.Cluztr.user._id }}, {}, function(err, group){
-                        if (err)
-                            res.status(400).json({ 
-                                status:400,
-                                message: err
-                            })
 
-                        if (group.usersId.length < 3) {
-                            User.findOne({ _id: req.Cluztr.user._id }, function (err, user){
-                                user.groupId = req.params.id;
-                                user.save();
-
-                                Invitation.remove({ _id: invitation._id }, function(err) {
-                                    if (err) {
-                                        res.status(400).json({
-                                            status: 400,
-                                            message: err
-                                        })
-                                    }
-
-                                    res.json({
-                                        status: 200,
-                                        message: "Join group success",
-                                        data: group,
-                                        user: user
-                                    });
-                                })
+                    Group.findOne({ _id: req.params.id}, function(err, group) {
+                        if (err) {
+                            res.json({
+                                status: 400,
+                                message: "That group doesn't exist"
                             });
                         } else {
-                            res.status(400).json({
-                                status: 400,
-                                message: "Group full"
-                            })
+                            if (group.usersId.length < 3) {
+                                User.findOne({ _id: req.Cluztr.user._id }, function (err, user){
+                                    if (err) {
+                                        res.json({
+                                            status: 400,
+                                            message: "User doesn't exist"
+                                        });
+                                    } else {
+                                        user.groupId = req.params.id;
+                                        user.save();
+                                        group.usersId.push(req.Cluztr.user._id);
+                                        group.save();
+
+                                        Invitation.remove({ _id: invitation._id }, function(err) {
+                                            if (err) {
+                                                res.status(400).json({
+                                                    status: 400,
+                                                    message: err
+                                                })
+                                            }
+
+                                            res.json({
+                                                status: 200,
+                                                message: "Join group success",
+                                                data: group,
+                                                user: user
+                                            });
+                                        })
+                                    }
+                                });
+                            } else {
+                                res.json({
+                                    status: 400,
+                                    message: "That group is full"
+                                });
+                            }
                         }
                     });
-                } else {
-                    res.status(400).json({
-                        status: 400,
-                        message: "You have no invitations"
-                    })
                 }
-
             })
         } else {
             res.status(400).json({
@@ -169,7 +174,7 @@ var group = {
                 if (err) {
                     res.json({
                         status: 400,
-                        message: err
+                        message: "No invitations found"
                     });
                 }
 
