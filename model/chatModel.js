@@ -1,12 +1,13 @@
 var mongoose = require('mongoose'),
-    User     = require('./userModel'),
+    Group     = require('./groupModel'),
     Schema   = mongoose.Schema;
 
 var ChatSchema = new Schema({
-	message: { type: String },
-	date   : { type: Date },
-	group1 : { type: Schema.Types.ObjectId, ref: 'Group' },
-	group2 : { type: Schema.Types.ObjectId, ref: 'Group' },
+	message   : { type: String },
+	created_at: { type: Date },
+	group1    : { type: Schema.Types.ObjectId, ref: 'Group' },
+	group2    : { type: Schema.Types.ObjectId, ref: 'Group' },
+    isPrivate : { type: Boolean }
 })
 
 
