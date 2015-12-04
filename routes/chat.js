@@ -7,7 +7,7 @@ var Picture  = require('../model/pictureModel.js');
 var chat = {
     getAll: function (req, res) {
         var groupId = req.params.id
-        console.log(groupId);
+
         Chat.find({ $or: [{group1: [groupId]}, {group2: [groupId]}] })
             .sort({ isPrivate: -1 }) // Own group chat before
             .populate('group1 group2')
@@ -42,7 +42,7 @@ var chat = {
                             if (err) {
                                 callback(err);
                             };
-                            console.log(output);
+
                             async.each(output.usersId, function(val, done) {
                                 Picture.populate(val,{ path: "profilePicture" },function(err,output) {
                                     done(err);
@@ -58,7 +58,7 @@ var chat = {
                             if (err) {
                                 callback(err);
                             };
-                            console.log(output);
+
                             async.each(output.usersId, function(val, done) {
                                 Picture.populate(val,{ path: "profilePicture" },function(err,output) {
                                     done(err);
@@ -77,7 +77,11 @@ var chat = {
                             message: err
                         });
                     };
-                    res.json(chatsFormatted);
+                    res.json({
+                        status: 200,
+                        data: chatsFormatted,
+                        message: "Chats finds"
+                    });
                 })
             })
     }
