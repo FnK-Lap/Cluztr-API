@@ -2,6 +2,7 @@ var express = require('express');
 var router  = express.Router();
  
 var auth    = require('./auth.js');
+var user    = require('./user.js');
 var group   = require('./group.js');
 var chat    = require('./chat.js');
  
@@ -26,6 +27,7 @@ router.get('/api/v1/group/:id/chats', chat.getAll);
 
 // User
 router.get('/api/v1/user/me/invitations', group.getInvitations);
+router.put('/api/v1/user/me/interest', user.putInterest)
 
 
 module.exports = router;
