@@ -1,6 +1,7 @@
 var jwt        = require('jwt-simple');
 var async      = require('async');
 var Group      = require('../model/groupModel.js');
+var Chat       = require('../model/chatModel.js');
 var Invitation = require('../model/invitationModel.js');
 var Picture    = require('../model/pictureModel.js');
 var User       = require('../model/userModel.js');
@@ -11,15 +12,23 @@ var group = {
 
         if (!user.groupId) {
             var group = new Group({
-            isActive: false,
-            adminId: user._id,
-            usersId: [user._id] 
+                isActive: false,
+                adminId:  user._id,
+                usersId:  [user._id] 
             });
 
             group.save();
 
             user.groupId = group._id;
             user.save();
+
+            var chat = new Chat({
+                created_at: new Date(),
+                group1:     group._id,
+                isPrivate:  true
+            });
+
+            chat.save();
 
             res.json({
                 status: 201,
