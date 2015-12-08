@@ -24,6 +24,7 @@ router.post('/api/v1/group/:id/join', group.join);
 
 // Chat
 router.get('/api/v1/group/:id/chats', chat.getAll);
+router.get('/api/v1/group/chat/:id', chat.getChat);
 
 // User
 router.get('/api/v1/user/me/invitations', group.getInvitations);
