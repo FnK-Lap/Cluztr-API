@@ -18,7 +18,10 @@ var user = {
                 res.status(200).json({
                     status: 200,
                     message: "Centre d'interets ajouté a l'utilisateur",
-                    data: interests
+                    data: {
+                        "interests": interests,
+                        "user": user
+                    }
                 })
             })
         } else {
