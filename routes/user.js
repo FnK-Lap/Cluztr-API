@@ -7,6 +7,9 @@ var Interest = require('../model/interestModel.js');
 var user = {
     putInterest: function (req, res) {
         var interestsArray = req.body.interests;
+        interestsArray = interestsArray.map(function(interest){
+            return interest.toLowerCase();
+        })
 
         if (interestsArray) {
             Interest.find({ name: {$in: interestsArray} }, function(err, interests) {
