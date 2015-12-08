@@ -90,7 +90,7 @@ var chat = {
     getChat: function(req, res) {
         var chatId = req.params.id;
         Chat.findOne({_id: chatId})
-        .populate("group1")
+        .populate("group1 group2")
         .exec(function (err, chat) {
             if (err) {
                 res.json({
@@ -99,7 +99,9 @@ var chat = {
                 });  
             } else {
                 if (chat) {
-                    if (_.findWhere(chat.group1.usersId, req.Cluztr.user._id)) {
+                    var groupUsers = [];
+                    groupUsers = chat.group1.usersId.concat(chat.group2.usersId);
+                    if (_.findWhere(groupUsers, req.Cluztr.user._id)) {
                         Message.populate(chat,{ path: "messages" },function (err,output) {
                             if (err) {
                                 res.json({
