@@ -148,6 +148,9 @@ var group = {
                                         user.groupId = req.params.id;
                                         user.save();
                                         group.usersId.push(req.Cluztr.user._id);
+                                        if (group.usersId.length == 3) {
+                                            group.isActive = true;
+                                        };
                                         group.save();
 
                                         Invitation.remove({ _id: invitation._id }, function(err) {
