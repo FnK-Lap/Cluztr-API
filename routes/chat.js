@@ -100,7 +100,11 @@ var chat = {
             } else {
                 if (chat) {
                     var groupUsers = [];
-                    groupUsers = chat.group1.usersId.concat(chat.group2.usersId);
+                    if (chat.group2) {
+                        groupUsers = chat.group1.usersId.concat(chat.group2.usersId);
+                    } else {
+                        groupUsers = chat.group1.usersId
+                    }
                     if (_.findWhere(groupUsers, req.Cluztr.user._id)) {
                         Message.populate(chat,{ path: "messages" },function (err,output) {
                             if (err) {
