@@ -113,7 +113,8 @@ var chat = {
                                     message: err
                                 });
                             }
-
+                            console.log("Test get messages");
+                            console.log(output);
                             async.each(output.messages,function(item,callback) {
                                 User.populate(item,{ path: "user" },function (err,results) {
                                     if (err) {
@@ -134,6 +135,7 @@ var chat = {
                                     })
                                 });
                             }, function(err) {
+                                console.log(chat);
                                 res.json({
                                     status: 200,
                                     message: "Get messages success",
@@ -155,6 +157,25 @@ var chat = {
                 }
             }
         });
+    },
+    newMessage: function(chatId, userId, message, callback) {
+        console.log("Nes message "+message);
+        var newMessage = new Message({
+            chat: chatId,
+            message: message,
+            user: userId,
+            created_at: new Date(),
+        })
+
+        newMessage.save();
+
+        var chat = Chat.findOne({_id: chatId}, function(err, chat) {
+            chat.messages.push(newMessage);
+            chat.save();
+
+            callback(newMessage);
+        });
+
     }
 }
 

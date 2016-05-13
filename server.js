@@ -2,12 +2,13 @@ var express    = require('express');
 var path       = require('path');
 var logger     = require('morgan');
 var bodyParser = require('body-parser');
-var mongoose = require( 'mongoose' ); 
+var mongoose   = require( 'mongoose' ); 
 
 var app = express();
 
+
 // Build the connection string 
-var dbURI = 'mongodb://localhost/Cluztr'; 
+var dbURI = process.env.MONGODB_URI; 
 
 // Create the database connection 
 mongoose.connect(dbURI); 
@@ -30,8 +31,6 @@ process.on('SIGINT', function() {
     process.exit(0); 
   }); 
 }); 
-
-
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({
@@ -72,3 +71,7 @@ app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + server.address().port);
 });
+
+var io = require('socket.io')(server);
+var socketio = require('./socketio/socketio')(io);
+socketio.init();

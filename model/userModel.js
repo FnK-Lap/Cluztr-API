@@ -5,8 +5,8 @@ var mongoose = require('mongoose'),
     Schema   = mongoose.Schema;
 
 var UserSchema = new Schema({
-    firstname     : { type: String, match: /^[a-zA-Z0-9-_]+$/ },
-    lastname      : { type: String, match: /^[a-zA-Z0-9-_]+$/ },
+    firstname     : { type: String},
+    lastname      : { type: String },
     age           : { type: Number, min: 18 },
     email         : { type: String, index: { unique: true } },
     gender        : { type: String, match: /^[male]||[female]$/ },

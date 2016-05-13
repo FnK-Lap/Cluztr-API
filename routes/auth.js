@@ -25,6 +25,7 @@ var auth = {
         var fb_access_token = req.body.fb_access_token || '';
 
         if (fb_access_token != '') {
+            console.log('Call Facebook');
             // Fire a query to your DB and check if the credentials are valid
             return auth.validateByFb(res, fb_access_token);
         } else if (username != '' && password != '') {
@@ -90,6 +91,9 @@ var auth = {
                                 var Bdate = new Date(birth[0], birth[2] - 1, birth[1]);
                                 var age   = Math.floor( ( (new Date() - Bdate) / 1000 / (60 * 60 * 24) ) / 365.25 );
 
+                                console.log('new User Model');
+                                console.log(parsedData);
+                                console.log(age);
                                 var newUser = new User({
                                     firstname      : parsedData.first_name,
                                     lastname       : parsedData.last_name,
@@ -97,12 +101,15 @@ var auth = {
                                     age            : age,
                                     gender         : parsedData.gender,
                                 });
+                                console.log('new User Model End');
                                 // Save user in DB
                                 newUser.save(function(err) {
                                     if (err) {
+                                        console.log(err);
                                         return err;
                                     }
 
+                                    console.log('new Picture Model');
                                     var profilePicture = new Picture({
                                         url: parsedData.picture.data.url,
                                         userId: newUser._id
