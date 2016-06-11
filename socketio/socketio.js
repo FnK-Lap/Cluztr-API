@@ -13,6 +13,8 @@ module.exports = function(io) {
 
                 chat.newMessage(chatId, userId, msg, function(newMessage) {
                     console.log('emit on ', chatId);
+                    io.emit('test io', 'content io');
+                    socket.emit('test socket', 'content socket');
                     io.emit(chatId, {message: newMessage});
                 });
 
