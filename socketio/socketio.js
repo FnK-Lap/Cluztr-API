@@ -4,16 +4,16 @@ module.exports = function(io) {
     var module = {};
 
     module.init = function() {
-        
+
         io.on('connection', function (socket) {
             console.log('Socket.io Connection');
-            
+
             socket.on('private message', function (chatId, userId, msg) {
                 console.log('I received a private message by ', chatId, ' ', userId, ' saying ', msg);
 
                 chat.newMessage(chatId, userId, msg, function(newMessage) {
                     console.log('emit on ', chatId);
-                    socket.emit(chatId, {message: newMessage});
+                    io.emit(chatId, {message: newMessage});
                 });
 
             });
