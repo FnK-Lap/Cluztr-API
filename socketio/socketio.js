@@ -12,7 +12,7 @@ module.exports = function(io) {
                 console.log('I received a private message by ', chatId, ' ', userId, ' saying ', msg);
 
                 chat.newMessage(chatId, userId, msg, function(newMessage) {
-                    console.log('emit');
+                    console.log('emit on ', chatId);
                     socket.emit(chatId, {message: newMessage});
                 });
 
