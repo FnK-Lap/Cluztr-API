@@ -74,6 +74,15 @@ var group = {
             }
         );
     },
+    getAll: function (req, res) {
+        Group.find({}, function(err, groups) {
+            res.json({
+                status: 200,
+                message: "Get all groups success",
+                data: groups
+            });
+        })
+    }
     invite: function(req, res) {
         // Check if group exist
         Group.findOne({ _id: req.params.id }, function (err, group){

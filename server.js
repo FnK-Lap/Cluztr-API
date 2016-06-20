@@ -72,6 +72,6 @@ var server = app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + server.address().port);
 });
 
-var io = require('socket.io')(server, {transports: ['polling'], 'polling duration': 10});
+var io = require('socket.io')(server, {transports: ['polling'], 'polling duration': 20});
 var socketio = require('./socketio/socketio')(io);
 socketio.init();
