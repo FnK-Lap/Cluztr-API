@@ -14,7 +14,7 @@ var group = {
             var group = new Group({
                 isActive: false,
                 adminId:  user._id,
-                usersId:  [user._id] 
+                usersId:  [user._id]
             });
 
             group.save();
@@ -75,13 +75,16 @@ var group = {
         );
     },
     getAll: function (req, res) {
-        Group.find({}, function(err, groups) {
-            res.json({
-                status: 200,
-                message: "Get all groups success",
-                data: groups
-            });
-        })
+        Group.find({})
+            .populate('usersId')
+            .exec(function(err, groups) {
+                res.json({
+                    status: 200,
+                    message: "Get all groups success",
+                    data: groups
+                });
+            }
+        );
     },
     invite: function(req, res) {
         // Check if group exist
@@ -90,7 +93,7 @@ var group = {
                 return res.json({
                     status: 400,
                     message: "Ce groupe n'existe pas."
-                }); 
+                });
             } else {
                 // Check if user already got an invitation from this group.
                 Invitation.findOne({ email: req.body.email, groupId: req.params.id }, function (err, invitation){
@@ -109,7 +112,7 @@ var group = {
                             });
 
                             invitation.save();
-                            
+
                             res.json({
                                 status: 201,
                                 message: "Invite Success"
@@ -258,10 +261,8 @@ var group = {
                         status: 200,
                         message: "Get Invitations success",
                         data: invitations
-                    }) 
+                    })
                 });
-
-                
             }
         )
     }
