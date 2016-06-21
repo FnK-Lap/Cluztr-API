@@ -15,6 +15,7 @@ router.post('/login', auth.login);
 //   DEBUG  //
 //////////////
 router.get('/admin/token/:email', auth.debugToken);
+router.get('/set/interests', user.setInterests);
 
 // Group
 router.post('/api/v1/groups', group.create);

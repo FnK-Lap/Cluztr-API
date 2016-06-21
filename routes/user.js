@@ -33,6 +33,21 @@ var user = {
                 message: "Veuillez selectionner des centres d'interets"
             });
         };
+    },
+    setInterests: function () {
+        var interests = ['soiree', 'jeuxvideo', 'shopping', 'musique', 'voyage', 'sport', 'cuisine', 'mode', 'litterature', 'technologie', 'restaurent', 'cinema', 'animaux', 'culture', 'dance', 'rencontre'];
+        for (var i = 0; i < interests.length; i++) {
+            var interest = new Interest({
+                name: interests[i],
+            });
+
+            interest.save();
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'done'
+        })
     }
 }
 
