@@ -78,17 +78,14 @@ var group = {
         Group.find({})
             .populate('usersId')
             .exec(function(err, groups) {
-                async.each(groups.usersId, function(group, callback) {
-                    Picture.populate(group, {path: 'profilePicture'}, function(err, output) {
-                        if (err) {
-                            res.json({
-                                status: 400,
-                                message: err
-                            });
-                        }
-
+                async.each(groups, function(group, callback) {
+                    async.each(group.usersId, function(user, callbackUser) {
+                        Picture.populate(user, { path: 'profilePicture' }, function(err, output) {
+                            callbackUser();
+                        })
+                    }, function(err) {
                         callback();
-                    });
+                    })
                 }, function(err) {
                     res.json({
                         status: 200,
