@@ -83,7 +83,7 @@ var group = {
                 async.each(groups, function(group, callback) {
                     async.each(group.usersId, function(user, callbackUser) {
                         Picture.populate(user, { path: 'profilePicture' }, function(err, output) {
-                            Interest.populate(item, { path: 'interests' }, function(err, output2) {
+                            Interest.populate(user, { path: 'interests' }, function(err, output2) {
                                 callbackUser();
                             })
                         })
