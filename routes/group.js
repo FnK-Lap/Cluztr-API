@@ -76,7 +76,7 @@ var group = {
     },
     getAll: function (req, res) {
         Group.find({})
-            .populate('usersId')
+            .populate('usersId.profilePicture')
             .exec(function(err, groups) {
                 res.json({
                     status: 200,
