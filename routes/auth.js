@@ -38,7 +38,7 @@ var auth = {
                 "status": 401,
                 "message": "Invalid credentials"
             });
-            
+
             return;
         }
     },
@@ -46,14 +46,14 @@ var auth = {
 
     validate: function(res, username, password) {
         // TODO : Get user in DB
-        
+
         // spoofing the DB response for simplicity
-        var dbUserObj = { // spoofing a userobject from the DB. 
+        var dbUserObj = { // spoofing a userobject from the DB.
             name: 'arvind',
             role: 'admin',
             username: 'arvind@myapp.com'
         };
- 
+
         return dbUserObj;
     },
 
@@ -173,7 +173,7 @@ var auth = {
             return;
         });
     },
- 
+
     validateUser: function(req, res, next, email) {
         User.findOne({ email: email }, function(err, user) {
             if (err) {
@@ -197,24 +197,24 @@ var auth = {
         })
     },
 }
- 
+
 // private method
 function genToken(user) {
     var expires = expiresIn(7); // 7 days
     var token   = jwt.encode({
         exp: expires
     }, require('../config/secret')());
-  
+
     return {
         token: token,
         expires: expires,
         user: user
     };
 }
- 
+
 function expiresIn(numDays) {
     var dateObj = new Date();
     return dateObj.setDate(dateObj.getDate() + numDays);
 }
- 
+
 module.exports = auth;

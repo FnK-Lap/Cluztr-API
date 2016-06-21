@@ -76,13 +76,26 @@ var group = {
     },
     getAll: function (req, res) {
         Group.find({})
-            .populate('usersId.profilePicture')
+            .populate('usersId')
             .exec(function(err, groups) {
-                res.json({
-                    status: 200,
-                    message: "Get all groups success",
-                    data: groups
-                });
+                async.each(groups.usersId, function(group, callback) {
+                    Picture.populate(group, {path: 'profilePicture'}, function(err, output) {
+                        if (err) {
+                            res.json({
+                                status: 400,
+                                message: err
+                            });
+                        }
+
+                        callback();
+                    });
+                }, function(err) {
+                    res.json({
+                        status: 200,
+                        message: "Get all groups success",
+                        data: groups
+                    });
+                })
             }
         );
     },
