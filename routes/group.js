@@ -5,6 +5,7 @@ var Chat       = require('../model/chatModel.js');
 var Invitation = require('../model/invitationModel.js');
 var Picture    = require('../model/pictureModel.js');
 var User       = require('../model/userModel.js');
+var Interest   = require('../model/interestModel.js');
 
 var group = {
     create: function (req, res) {
@@ -64,6 +65,7 @@ var group = {
 
                         callback();
                     });
+
                 }, function(err) {
                     res.json({
                         status: 200,
@@ -81,7 +83,9 @@ var group = {
                 async.each(groups, function(group, callback) {
                     async.each(group.usersId, function(user, callbackUser) {
                         Picture.populate(user, { path: 'profilePicture' }, function(err, output) {
-                            callbackUser();
+                            Interest.populate(item, { path: 'interests' }, function(err, output2) {
+                                callbackUser();
+                            })
                         })
                     }, function(err) {
                         callback();
