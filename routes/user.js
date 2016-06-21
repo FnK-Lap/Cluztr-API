@@ -34,7 +34,7 @@ var user = {
             });
         };
     },
-    setInterests: function () {
+    setInterests: function (req, res) {
         var interests = ['soiree', 'jeuxvideo', 'shopping', 'musique', 'voyage', 'sport', 'cuisine', 'mode', 'litterature', 'technologie', 'restaurent', 'cinema', 'animaux', 'culture', 'dance', 'rencontre'];
         for (var i = 0; i < interests.length; i++) {
             var interest = new Interest({
