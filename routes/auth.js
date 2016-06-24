@@ -60,7 +60,7 @@ var auth = {
     validateByFb: function(res, fb_access_token) {
         async.series([
             function(callback){
-                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name,gender,picture{url}&access_token=' + fb_access_token, function(err, response, data) {
+                request.get('https://graph.facebook.com/v2.3/me?fields=email,birthday,first_name,last_name,gender,picture.width(500){url}&access_token=' + fb_access_token, function(err, response, data) {
                     if (response.statusCode != 200) {   // If errors, return status code and error message
                         callback({
                             "status": response.statusCode,
