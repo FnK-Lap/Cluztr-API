@@ -62,8 +62,15 @@ var group = {
                                 message: err
                             });
                         }
-
-                        callback();
+                        Interest.populate(item, { path: "interests" }, function(err, output) {
+                          if (err) {
+                              res.json({
+                                  status: 400,
+                                  message: err
+                              });
+                          }
+                          callback();
+                        })
                     });
 
                 }, function(err) {
