@@ -173,9 +173,9 @@ var chat = {
             Message.populate(newMessage, { path: 'user' }, function(err, newMessage) {
                 chat.messages.push(newMessage);
                 chat.save();
+                callback(newMessage);
             })
 
-            callback(newMessage);
         });
 
     }
