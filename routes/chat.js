@@ -170,8 +170,10 @@ var chat = {
         newMessage.save();
 
         var chat = Chat.findOne({_id: chatId}, function(err, chat) {
-            chat.messages.push(newMessage);
-            chat.save();
+            Message.populate(newMessage, { path: 'user' }, function(err, newMessage) {
+                chat.messages.push(newMessage);
+                chat.save();
+            })
 
             callback(newMessage);
         });
