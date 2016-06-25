@@ -171,9 +171,11 @@ var chat = {
 
         var chat = Chat.findOne({_id: chatId}, function(err, chat) {
             Message.populate(newMessage, { path: 'user' }, function(err, newMessage) {
-                chat.messages.push(newMessage);
-                chat.save();
-                callback(newMessage);
+                Picture.populate(newMessage.user, { path: 'profilePicture' }, function(err, user) {
+                    chat.messages.push(newMessage);
+                    chat.save();
+                    callback(newMessage);
+                })
             })
 
         });
