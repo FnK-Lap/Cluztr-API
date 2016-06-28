@@ -39,14 +39,14 @@ var cluzt = {
 
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
         if (cluzt){
-          console.log(cluzt.acceptedUsers);
-          console.log(user._id);
-          if (_.contains(cluzt.acceptedUsers, user._id)){
-            res.json({
-              status: 400,
-              message: "You can't cluzt twice"
-            });
-          };
+          for (i = 0; i < cluzt.acceptedUsers.length; i++) {
+            if (user._id == cluzt.acceptedUsers[i]) {
+              res.json({
+                status: 400,
+                message: "You can't cluzt twice"
+              });
+            }
+          }
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
