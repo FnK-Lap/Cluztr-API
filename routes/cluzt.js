@@ -43,7 +43,7 @@ var cluzt = {
             if (user._id.equals(cluzt.acceptedUsers[i])) {
               return res.json({
                 status: 400,
-                message: "You can't cluzt twice"-
+                message: "You can't cluzt twice"
               });
             }
           }
