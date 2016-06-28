@@ -43,7 +43,7 @@ var cluzt = {
             if (user._id.equals(cluzt.acceptedUsers[i])) {
               return res.json({
                 status: 400,
-                message: "You can't cluzt twice"
+                message: "You can't cluzt twice"-
               });
             }
           }
@@ -57,12 +57,13 @@ var cluzt = {
               cluzt: cluzt
             });
           } else if (cluzt.acceptedUsers.length == 6){
-            new Chat({
+            var chat = new Chat({
                 created_at: new Date(),
                 group1: senderId,
                 group2: receiverId,
                 isPrivate:  false
             });
+            chat.save();
           }
         } else {
           var cluzt = new Cluzt({
