@@ -1,12 +1,13 @@
 var async    = require('async');
 var Chat     = require('../model/chatModel.js');
 var Cluzt    = require('../model/cluztModel.js');
+var Group    = require('../model/groupModel.js');
 var User     = require('../model/userModel.js');
 var _        = require('underscore');
 
 var cluzt = {
     getAllReceive : function (req, res) {
-      var groupId = req.params.id;
+      var groupId = req.Cluztr.user.groupId;
       Cluzt.find({receiver: groupId, send: true}, function (err, cluzts){
         if (err) {
           res.send(err)
