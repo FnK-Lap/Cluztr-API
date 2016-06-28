@@ -41,7 +41,7 @@ var cluzt = {
         if (cluzt){
           for (i = 0; i < cluzt.acceptedUsers.length; i++) {
             if (user._id.equals(cluzt.acceptedUsers[i])) {
-              res.json({
+              return res.json({
                 status: 400,
                 message: "You can't cluzt twice"
               });
