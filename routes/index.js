@@ -35,6 +35,7 @@ router.put('/api/v1/user/me/interest', user.putInterest);
 
 // Cluzts
 router.get('/api/v1/cluzts/me', cluzt.getAllReceive);
+router.get('/api/v1/cluzts/sent', cluzt.getAllSent);
 router.post('/api/v1/cluzt/:receiverId', cluzt.setCluzt);
 
 

@@ -32,6 +32,32 @@ var cluzt = {
         )}
       });
     },
+    getAllSent : function (req, res) {
+      var groupId = req.Cluztr.user.groupId;
+      Cluzt.find({sender: groupId, send: true}, function (err, cluzts){
+        if (err) {
+          res.send(err)
+        } else {
+          async.each(cluzts, function(item, cb) {
+            Group.populate(item, { path: "receiver" }, function(err, output) {
+              if (err) {
+                res.json({
+                  status:400,
+                  message: err
+                });
+              }
+              cb();
+            });
+          }, function(err) {
+            res.json({
+              status:200,
+              message: "Get Cluzt success",
+              data: cluzts
+            });
+          }
+        )}
+      });
+    },
     setCluzt : function (req, res) {
       var user = req.Cluztr.user;
       var senderId = user.groupId;
