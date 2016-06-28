@@ -28,7 +28,7 @@ var cluzt = {
               data: cluzts
             });
           }
-        }
+        )}
       });
     }
     // setCluzt : function (req, res) {
