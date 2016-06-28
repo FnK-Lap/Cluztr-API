@@ -39,9 +39,9 @@ var cluzt = {
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
         if (cluzt){
           cluzt.acceptedUsers.push(user._id);
-          if (clutz.acceptedUsers.length == 3){
+          if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
-          } else if (clutz.acceptedUsers.length == 6){
+          } else if (cluzt.acceptedUsers.length == 6){
             new Chat({
                 created_at: new Date(),
                 group1: senderId,
