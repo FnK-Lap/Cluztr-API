@@ -1,11 +1,11 @@
 var express = require('express');
 var router  = express.Router();
- 
+
 var auth    = require('./auth.js');
 var user    = require('./user.js');
 var group   = require('./group.js');
 var chat    = require('./chat.js');
- 
+
 /*
  * Routes that can be accessed by any one
  */
@@ -30,7 +30,10 @@ router.get('/api/v1/chat/:id', chat.getChat);
 
 // User
 router.get('/api/v1/user/me/invitations', group.getInvitations);
-router.put('/api/v1/user/me/interest', user.putInterest)
+router.put('/api/v1/user/me/interest', user.putInterest);
+
+// Cluzts
+router.get('api/v1/cluzts/me', cluzt.getAllReceive);
 
 
 module.exports = router;
