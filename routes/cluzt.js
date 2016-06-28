@@ -40,10 +40,7 @@ var cluzt = {
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
         if (cluzt){
           for (i = 0; i < cluzt.acceptedUsers.length; i++) {
-            console.log(user._id.equals(cluzt.acceptedUsers[i]));
-            console.log(typeof cluzt.acceptedUsers[i]);
-            console.log(typeof user._id);
-            if (user._id == cluzt.acceptedUsers[i]) {
+            if (user._id.equals(cluzt.acceptedUsers[i])) {
               res.json({
                 status: 400,
                 message: "You can't cluzt twice"
