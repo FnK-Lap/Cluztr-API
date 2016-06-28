@@ -30,28 +30,42 @@ var cluzt = {
           }
         )}
       });
+    },
+    setCluzt : function (req, res) {
+      var user = req.Cluztr.user;
+      var senderId = req.params.senderId;
+      var receiverId = req.params.receiverId;
+
+      Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
+        if (cluzt){
+          cluzt.acceptedUsers.push(user._id);
+          if (clutz.acceptedUsers.length == 3){
+            cluzt.send = true;
+          } else if (clutz.acceptedUsers.length == 6){
+            new Chat({
+                created_at: new Date(),
+                group1: senderId,
+                group2: receiverId,
+                isPrivate:  false
+            });
+          }
+        } else {
+          var cluzt = new Cluzt({
+            sender: senderId,
+            receiver: receiverId,
+            acceptedUsers: [user._id],
+            send: false
+          });
+        }
+        cluzt.save();
+      });
+
+      res.json({
+        status: 201,
+        message: 'clutz created',
+        cluzt: cluzt
+      });
     }
-    // setCluzt : function (req, res) {
-    //   var user = req.Cluztr.user;
-    //   var senderId = req.params.senderId;
-    //   var receiverId = req.params.receiverId;
-    //
-    //   Cluzt.find
-    //   var cluzt = new Cluzt({
-    //     sender: senderId,
-    //     receiver: receiverId,
-    //     acceptedUsers: [user],
-    //     send: false
-    //   });
-    //
-    //   cluzt.save();
-    //
-    //   res.json({
-    //     status: 201,
-    //     message: 'clutz created',
-    //     cluzt: cluzt
-    //   });
-    // }
 }
 
 module.exports = cluzt;
