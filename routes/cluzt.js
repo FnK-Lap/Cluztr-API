@@ -45,9 +45,9 @@ var cluzt = {
                 status: 400,
                 message: "You can't cluzt twice"
               });
-              break;
             }
           }
+          console.log('KESTU FOUS LA');
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
