@@ -45,6 +45,7 @@ var cluzt = {
                 status: 400,
                 message: "You can't cluzt twice"
               });
+              break;
             }
           }
           cluzt.acceptedUsers.push(user._id);
@@ -69,7 +70,7 @@ var cluzt = {
         cluzt.save();
       });
 
-      res.json({
+      return res.json({
         status: 201,
         message: 'clutz created',
         cluzt: cluzt
