@@ -84,7 +84,7 @@ var group = {
         );
     },
     getAll: function (req, res) {
-        Group.find({_id: {$not: req.Cluztr.user.groupId }})
+        Group.find({_id: {$ne: req.Cluztr.user.groupId }})
             .populate('usersId')
             .exec(function(err, groups) {
                 async.each(groups, function(group, callback) {
