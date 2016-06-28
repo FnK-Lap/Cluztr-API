@@ -38,6 +38,12 @@ var cluzt = {
 
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
         if (cluzt){
+          if (cluzt.acceptedUsers.indexOf(user._id)){
+            res.json({
+              status: 400,
+              message: "You can't cluzt twice"
+            });
+          }
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
