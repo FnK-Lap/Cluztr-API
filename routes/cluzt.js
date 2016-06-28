@@ -40,8 +40,9 @@ var cluzt = {
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
         if (cluzt){
           for (i = 0; i < cluzt.acceptedUsers.length; i++) {
-            console.log(user._id);
-            console.log(cluzt.acceptedUsers[i]);
+            console.log(user._id == cluzt.acceptedUsers[i]);
+            console.log(typeof cluzt.acceptedUsers[i]);
+            console.log(typeof user._id);
             if (user._id == cluzt.acceptedUsers[i]) {
               res.json({
                 status: 400,
