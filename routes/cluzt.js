@@ -50,6 +50,7 @@ var cluzt = {
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
+            cluzt.save();
             return res.json({
               status: 201,
               message: 'clutz updated',
