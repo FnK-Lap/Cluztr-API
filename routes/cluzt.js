@@ -7,7 +7,7 @@ var _        = require('underscore');
 var cluzt = {
     getAllReceive : function (req, res) {
       var groupId = req.params.id;
-      Cluzt.find({receiver: groupId, send: true) {
+      Cluzt.find({receiver: groupId, send: true}, function (err, cluzts){
         if (err) {
           res.send(err)
         } else {
