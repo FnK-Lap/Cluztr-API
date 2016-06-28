@@ -33,7 +33,7 @@ var cluzt = {
     },
     setCluzt : function (req, res) {
       var user = req.Cluztr.user;
-      var senderId = req.params.senderId;
+      var senderId = user.groupId;
       var receiverId = req.params.receiverId;
 
       Cluzt.findOne({receiver: receiverId, sender: senderId}, function (err, cluzt){
