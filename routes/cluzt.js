@@ -4,8 +4,8 @@ var Cluzt    = require('../model/cluztModel.js');
 var User     = require('../model/userModel.js');
 var _        = require('underscore');
 
-// var cluzt = {
-//     getAllReceive : function (req, res) {
+var cluzt = {
+    getAllReceive : function (req, res) {
 //       var groupId = req.params.id;
 //       Cluzt.find({receiver.id == groupId && send == true) {
 //         if (err) {
@@ -30,7 +30,7 @@ var _        = require('underscore');
 //           }
 //         }
 //       });
-//     }
-// }
+    }
+}
 
-// module.exports = cluzt;
+module.exports = cluzt;
