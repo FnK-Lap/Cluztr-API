@@ -47,10 +47,15 @@ var cluzt = {
               });
             }
           }
-          console.log('KESTU FOUS LA');
+          console.log('KESTU FOUS LA');g
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
+            return res.json({
+              status: 201,
+              message: 'clutz updated',
+              cluzt: cluzt
+            });
           } else if (cluzt.acceptedUsers.length == 6){
             new Chat({
                 created_at: new Date(),
@@ -68,12 +73,11 @@ var cluzt = {
           });
         }
         cluzt.save();
-      });
-
-      return res.json({
-        status: 201,
-        message: 'clutz created',
-        cluzt: cluzt
+        return res.json({
+          status: 201,
+          message: 'clutz created',
+          cluzt: cluzt
+        });
       });
     }
 }
