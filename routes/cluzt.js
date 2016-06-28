@@ -4,13 +4,6 @@ var Cluzt    = require('../model/cluztModel.js');
 var User     = require('../model/userModel.js');
 var _        = require('underscore');
 
-Comment
-  .find()
-  .populate('author')
-  .exec(function (err, comments) {
-    console.log(comments);
-  });
-
 // var cluzt = {
 //     getAllReceive : function (req, res) {
 //       var groupId = req.params.id;
