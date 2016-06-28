@@ -5,6 +5,7 @@ var auth    = require('./auth.js');
 var user    = require('./user.js');
 var group   = require('./group.js');
 var chat    = require('./chat.js');
+var cluzt    = require('./cluzt.js');
 
 /*
  * Routes that can be accessed by any one
