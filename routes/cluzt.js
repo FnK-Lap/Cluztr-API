@@ -47,7 +47,6 @@ var cluzt = {
               });
             }
           }
-          console.log('KESTU FOUS LA');g
           cluzt.acceptedUsers.push(user._id);
           if (cluzt.acceptedUsers.length == 3){
             cluzt.send = true;
