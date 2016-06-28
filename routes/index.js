@@ -34,7 +34,7 @@ router.get('/api/v1/user/me/invitations', group.getInvitations);
 router.put('/api/v1/user/me/interest', user.putInterest);
 
 // Cluzts
-router.get('api/v1/cluzts/me', cluzt.getAllReceive);
+router.get('/api/v1/cluzts/me', cluzt.getAllReceive);
 
 
 module.exports = router;
