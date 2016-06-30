@@ -68,7 +68,7 @@ var cluzt = {
     },
     getAllSent : function (req, res) {
       var groupId = req.Cluztr.user.groupId;
-      Cluzt.find({sender: groupId, send: true}, function (err, cluzts){
+      Cluzt.find({sender: groupId, send: false}, function (err, cluzts){
         if (err) {
           res.send(err)
         } else {
