@@ -17,32 +17,32 @@ var cluzt = {
           async.each(cluzts, function(cluzt, done) {
             async.parallel({
               sender: function(cb) {
-                      Group.populate(cluzt, { path: "sender" }, function(err, output) {
-                        if (err) {
-                          res.send(err);
-                        }
+                Group.populate(cluzt, { path: "sender" }, function(err, output) {
+                  if (err) {
+                    res.send(err);
+                  }
 
-                        User.populate(cluzt.sender, { path: "usersId" }, function(err, output2) {
-                          async.each(cluzt.sender.usersId, function(user, cb2) {
-                            async.parallel({
-                              picture: function(callback) {
-                                Picture.populate(user, { path: "profilePicture" }, function(err, output) {
-                                  callback();
-                                })
-                              },
-                              interest: function(callback) {
-                                Interest.populate(user, { path: 'interests' }, function() {
-                                  callback();
-                                })
-                              }
-                            }, function(err) {
-                              cb2();
-                            });
-                          }, function(err) {
-                            cb();
+                  User.populate(cluzt.sender, { path: "usersId" }, function(err, output2) {
+                    async.each(cluzt.sender.usersId, function(user, cb2) {
+                      async.parallel({
+                        picture: function(callback) {
+                          Picture.populate(user, { path: "profilePicture" }, function(err, output) {
+                            callback();
                           })
-                        })
-                      })
+                        },
+                        interest: function(callback) {
+                          Interest.populate(user, { path: 'interests' }, function() {
+                            callback();
+                          })
+                        }
+                      }, function(err) {
+                        cb2();
+                      });
+                    }, function(err) {
+                      cb();
+                    })
+                  })
+                })
               },
               receiver: function(cb) {
                 Group.populate(cluzt, { path: 'receiver' }, function(err) {
@@ -68,20 +68,52 @@ var cluzt = {
     },
     getAllSent : function (req, res) {
       var groupId = req.Cluztr.user.groupId;
-      Cluzt.find({sender: groupId, send: true}, function (err, cluzts){
+      Cluzt.find({sender: groupId, send: false}, function (err, cluzts){
         if (err) {
           res.send(err)
         } else {
-          async.each(cluzts, function(item, cb) {
-            Group.populate(item, { path: "receiver" }, function(err, output) {
-              if (err) {
-                res.json({
-                  status:400,
-                  message: err
-                });
+          async.each(cluzts, function(cluzt, done) {
+            async.parallel({
+              sender: function(cb) {
+                Group.populate(cluzt, { path: 'sender' }, function(err) {
+                  if (err) { res.send(err) }
+
+                  User.populate(cluzt.sender, { path: "usersId" }, function() {
+                    cb();
+                  })
+                })
+              },
+              receiver: function(cb) {
+                Group.populate(cluzt, { path: "receiver" }, function(err, output) {
+                  if (err) {
+                    res.send(err);
+                  }
+
+                  User.populate(cluzt.receiver, { path: "usersId" }, function(err, output2) {
+                    async.each(cluzt.receiver.usersId, function(user, cb2) {
+                      async.parallel({
+                        picture: function(callback) {
+                          Picture.populate(user, { path: "profilePicture" }, function(err, output) {
+                            callback();
+                          })
+                        },
+                        interest: function(callback) {
+                          Interest.populate(user, { path: 'interests' }, function() {
+                            callback();
+                          })
+                        }
+                      }, function(err) {
+                        cb2();
+                      });
+                    }, function(err) {
+                      cb();
+                    })
+                  })
+                })
               }
-              cb();
-            });
+            }, function(err) {
+                done();
+            })
           }, function(err) {
             res.json({
               status:200,
@@ -131,7 +163,7 @@ var cluzt = {
             return res.json({
               status: 201,
               message: 'chat created',
-              cluzt: clust,
+              cluzt: cluzt,
               done: true
             })
           }
@@ -159,7 +191,7 @@ var cluzt = {
                 return res.json({
                   status: 201,
                   message: 'chat created',
-                  cluzt: clust,
+                  cluzt: cluzt,
                   done: true
                 })
               }
